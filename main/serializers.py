@@ -18,8 +18,19 @@ class ItemCreateSerializer(serializers.ModelSerializer):
         ]
 
 
+class PlaceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Place
+        fields = [
+            'place_id',
+            'place_name',
+        ]
+
+
 class CheckCreateSerializer(serializers.ModelSerializer):
     items = ItemCreateSerializer(many=True)
+    place = PlaceSerializer(many=False)
 
     class Meta:
         model = models.Check
@@ -31,11 +42,22 @@ class CheckCreateSerializer(serializers.ModelSerializer):
             'nds_amount',
             'tips_amount',
             'payment_method',
+            'place',
         ]
 
     def create(self, validated_data):
         items = validated_data.pop('items')
-        check = models.Check.objects.create(**validated_data)
+        place = validated_data.pop('place')
+
+        if place:
+            place_id = place.get('place_id')
+
+            if not models.Place.objects.filter(place_id=place_id).exists():
+                place = models.Place.objects.create(**place)
+            else:
+                place = models.Place.objects.get(place_id=place_id)
+
+        check = models.Check.objects.create(place=place, **validated_data)
 
         for item in items:
             category = item.get('category')
@@ -93,6 +115,7 @@ class ItemSerializer(serializers.ModelSerializer):
 
 class CheckSerializer(serializers.ModelSerializer):
     items = ItemSerializer(many=True)
+    place = PlaceSerializer(many=False)
 
     class Meta:
         model = models.Check
@@ -104,4 +127,5 @@ class CheckSerializer(serializers.ModelSerializer):
             'nds_amount',
             'tips_amount',
             'payment_method',
+            'place',
         ]

@@ -9,6 +9,7 @@ class Check(models.Model):
     tips_amount = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='Сумма чаевых',
                                       null=True, blank=True)
     payment_method = models.CharField(max_length=35, verbose_name='Метод оплаты')
+    place = models.ForeignKey('Place', on_delete=models.SET_NULL, verbose_name='Продукт', null=True, blank=True)
 
     def __str__(self):
         return self.transaction_id
@@ -53,3 +54,15 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
+
+
+class Place(models.Model):
+    place_id = models.CharField(max_length=100, unique=True, verbose_name='Идентификатор')
+    place_name = models.CharField(max_length=35, verbose_name='Название')
+
+    def __str__(self):
+        return self.place_id
+
+    class Meta:
+        verbose_name = "Место покупки"
+        verbose_name_plural = "Места покупок"
