@@ -11,7 +11,6 @@ logging.basicConfig(level=logging.INFO)
 config = {
     'bootstrap.servers': f'{settings.KAFKA_HOST}:9092',
     'client.id': settings.KAFKA_CLIENT,
-    'group.id': settings.KAFKA_CLIENT,
 }
 
 producer = Producer(config)
