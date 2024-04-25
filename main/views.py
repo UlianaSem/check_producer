@@ -1,5 +1,6 @@
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from main import models, serializers, producer
@@ -8,6 +9,7 @@ from main import models, serializers, producer
 class CheckCreateAPIView(CreateAPIView):
     queryset = models.Check.objects.all()
     serializer_class = serializers.CheckCreateSerializer
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
