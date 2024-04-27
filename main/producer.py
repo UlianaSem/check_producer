@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 config = {
-    'bootstrap.servers': f'{settings.KAFKA_HOST}:9092',
+    'bootstrap.servers': f'{settings.KAFKA_HOST}:{settings.KAFKA_PORT}',
     'client.id': settings.KAFKA_CLIENT,
 }
 
